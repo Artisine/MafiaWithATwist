@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MAFIA</title>
+</head>
+<body>
+	<main class="p-5">
+		<section name="enterGame" class="fillTheScreen" style="display:block">
+			<div name="main" class="border p-3">
+				<div name="middleInner">
+					<h1>MAFIA</h1>
+					<p>You never know who is who</p>
+					<button id="enterGame" class="btn btn-outline-dark text-white">Enter game</button>
+					<p name="enterError" style="display:none" class="text-danger">Error connecting to Server; Reload Page; If this persists, check network settings.</p>
+				</div>
+			</div>
+		</section>
+		<section name="serverList" class="fillTheScreen" style="display:none">
+			<div name="main" class="border p-3">
+				<div class="row no-gutters" style="height:100%;">
+					<div class="col">
+						<h3>MAFIA :: Room List</h3>
+						<br>
+						<div class="border">
+							<p>Hi</p>
+							<p>Hello</p>
+							<p>aaa</p>
+						</div>
+					</div>
+					<div class="col">
+						<h2>Beeeep</h2>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<link href="./bootstrap.min.css" rel="stylesheet" type="text/css">
+	<style>
+		main {
+			width: 100vw;
+			height: 100vh;
+			background-color: #000000;
+			color: #ffffff;
+			transition: background-color 5s ease;
+		}
+		main.changeColor {
+			background-color: white;
+			color: black;
+		}
+		.fillTheScreen {
+			width: 100%;
+			height: 100%;
+		}
+		.text-black {
+			color: #000000;
+		}
+		
+		section > div[name="main"] {
+			width: 100%;
+			height: 100%;
+		}
+
+		section[name="enterGame"] div[name="main"] {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		section[name="enterGame"] div[name="middleInner"] {
+			text-align: center;
+		}
+
+	</style>
+	<script src="./socket.io/socket.io.js"></script>
+	<script src="client.js"></script>
+</body>
+</html>
