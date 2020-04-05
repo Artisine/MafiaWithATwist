@@ -20,13 +20,28 @@
 		<section name="serverList" class="fillTheScreen" style="display:none">
 			<div name="main" class="border p-3">
 				<div class="row no-gutters" style="height:100%;">
-					<div class="col">
+					<div class="col-md-9">
 						<h3>MAFIA :: Room List</h3>
 						<br>
-						<div class="border">
-							<p>Hi</p>
-							<p>Hello</p>
-							<p>aaa</p>
+						<div class="" style="width:100%;height:100%;">
+							<div id="matchmaking-scrollingList" class="border-bottom border-white" style="max-height: 10cm; overflow-y: auto;">
+
+								<div id="matchmaking-room:" class="matchmaking-listObject border-top border-grey p-1">
+									<div class="row no-gutters">
+										<div class="col">
+											<p class="d-inline">Room ID here</p>
+										</div>
+										<div class="col">
+											<p class="d-inline">Room Name</p>
+										</div>
+									</div>
+								</div>
+
+								<div id="matchmaking-empty" class="matchmaking-listObject p-1">
+									<p class="margin0" style="color: #a3a3a3;">There don't seem to be any matches going on...</p>
+								</div>
+
+							</div>
 						</div>
 					</div>
 					<div class="col">
@@ -74,6 +89,10 @@
 
 	</style>
 	<script src="./socket.io/socket.io.js"></script>
-	<script src="client.js"></script>
+	<script src="./client.js"></script>
+	<script src="./feather.min.js"></script>
+	<script>
+		feather.replace();
+	</script>
 </body>
 </html>

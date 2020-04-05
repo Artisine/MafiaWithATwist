@@ -15,7 +15,7 @@ class Client {
 		this.inRoom = false;
 		this.room = null;
 		this.roomId = null;
-		console.log(`[Create] Client ${this.socketId}: ${this.socket}`);
+		console.log(`[Create] Client ${this.socketId}`);
 	}
 	_destroy() {
 		if (this.room) {
@@ -36,6 +36,7 @@ class Client {
 function clientAdded(socket) {
 	clients.set(socket.id, new Client(socket.id, socket));
 	console.log(`[+] ${socket.id}`);
+	console.log(`${socket.id} is in Room ${clients.get(socket.id).roomId}`);
 }
 function clientRemoving(socketId) {
 	clients.delete(socketId);
@@ -63,7 +64,7 @@ class Room {
 	}
 
 	details() {
-		console.log(`Room ${this.id}, ${this.name},\n-Clients: ${this.clients.values()}`);
+		console.log(`Room ${this.id}, ${this.name},\n-Clients: ${this.clients}`);
 	}
 
 
@@ -96,7 +97,7 @@ io.on("connection", function(socket) {
 	const socketId = socket.id;
 	socket.on("disconnect", ()=>clientRemoving(socketId));
 
-
+	
 
 	clientAdded(socket);
 });
