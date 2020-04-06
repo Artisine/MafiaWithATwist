@@ -13,39 +13,77 @@
 					<h1>MAFIA</h1>
 					<p>You never know who is who</p>
 					<button id="enterGame" class="btn btn-outline-dark text-white">Enter game</button>
-					<p name="enterError" style="display:none" class="text-danger">Error connecting to Server; Reload Page; If this persists, check network settings.</p>
+					<p name="enterError" style="display:none" class="text-danger mt-1">Error connecting to Server; Reload Page; If this persists, check network settings.</p>
 				</div>
 			</div>
 		</section>
 		<section name="serverList" class="fillTheScreen" style="display:none">
 			<div name="main" class="border p-3">
 				<div class="row no-gutters" style="height:100%;">
-					<div class="col-md-9">
+					<div class="col-md-12 col-lg-6">
 						<h3>MAFIA :: Room List</h3>
 						<br>
 						<div class="" style="width:100%;height:100%;">
-							<div id="matchmaking-scrollingList" class="border-bottom border-white" style="max-height: 10cm; overflow-y: auto;">
-
-								<div id="matchmaking-room:" class="matchmaking-listObject border-top border-grey p-1">
-									<div class="row no-gutters">
-										<div class="col">
-											<p class="d-inline">Room ID here</p>
-										</div>
-										<div class="col">
-											<p class="d-inline">Room Name</p>
-										</div>
+							<div id="matchmaking-legend" class="border-top border-grey p-1">
+								<div class="row no-gutters">
+									<div class="col">
+										<p class="d-inline"><b>Room ID</b></p>
+									</div>
+									<div class="col">
+										<p class="d-inline"><b>Name</b></p>
+									</div>
+									<div class="col">
+										<p class="d-inline"><b>Password Locked 🔒</b></p>
 									</div>
 								</div>
+							</div>
+							<div id="matchmaking-scrollingList" class="border-bottom" style="max-height: 10cm; overflow-y: auto;">
 
-								<div id="matchmaking-empty" class="matchmaking-listObject p-1">
-									<p class="margin0" style="color: #a3a3a3;">There don't seem to be any matches going on...</p>
-								</div>
+								<!-- <div id="room:00bfff" class="room border-top border-grey p-1">
+									<div class="row no-gutters">
+										<div class="col">
+											<p class="d-inline">#00bfff</p>
+										</div>
+										<div class="col">
+											<p class="d-inline">The Epic Room join pls i is lonely</p>
+										</div>
+									</div>
+								</div> -->
 
+								
+
+							</div>
+							<div id="matchmaking-empty" class="p-1">
+								<p class="margin0" style="color: #a3a3a3;">There aren't any rounds of MAFIA happening; how about making your own?</p>
 							</div>
 						</div>
 					</div>
-					<div class="col">
-						<h2>Beeeep</h2>
+					<div class="col" style="padding-left: 16px;">
+						<div class="mb-2">
+							<button id="create-room-btn" class="btn btn-sm btn-secondary" style="position:absolute;margin-right:0">Create Room</button>
+						</div><br>
+						<div id="room-creator" class="p-2" style="display:none">
+							<h3>Creating a Room are we?</h3>
+							<p>Alrighty then!</p>
+							<form>
+								<div class="form-group">
+									<div class="input-group">
+										<input id="room-creator_name" type="text" class="form-control" required placeholder="Room Name is ...">
+									</div>
+									<div class="custom-control custom-switch">
+										<input type="checkbox" class="custom-control-input" id="room-creator_locked">
+										<label class="custom-control-label" for="room-creator_locked">Will it be 🔒 with a password?</label>
+									</div>
+									<div class="input-group mt-1">
+										<input id="room-creator_password" type="text" class="form-control" disabled placeholder="Super_secret_password">
+									</div>
+									<div class="input-group mt-3">
+										<p id="room-creator_error" class="text-danger w-100" style="display:none">Error: Room Name is required</p><br>
+										<button id="room-creator_submit" type="submit" class="btn btn-dark">Create Room! Do it!</button>
+									</div>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -59,7 +97,7 @@
 			height: 100vh;
 			background-color: #000000;
 			color: #ffffff;
-			transition: background-color 5s ease;
+			transition: background-color 5s ease, color 5s ease;
 		}
 		main.changeColor {
 			background-color: white;
@@ -85,6 +123,14 @@
 		}
 		section[name="enterGame"] div[name="middleInner"] {
 			text-align: center;
+		}
+
+		.room {
+			transition: background-color 0.5s ease;
+			cursor: pointer;
+		}
+		.room:hover {
+			background-color: rgba(0, 0, 0, 0.125);
 		}
 
 	</style>

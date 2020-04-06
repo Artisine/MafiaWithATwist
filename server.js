@@ -97,6 +97,13 @@ io.on("connection", function(socket) {
 	const socketId = socket.id;
 	socket.on("disconnect", ()=>clientRemoving(socketId));
 
+
+	socket.on("client->server:request-room-creation-with-name", (data, ack)=>{
+		const {name} = data;
+		const room = Room.createRoom(name);
+		ack(room.id);
+		console.log(`Created new Room #${room.id} with name ${room.name} - then sent ack with room-id`);
+	});
 	
 
 	clientAdded(socket);
