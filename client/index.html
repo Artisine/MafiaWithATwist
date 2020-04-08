@@ -19,7 +19,7 @@
 		</section>
 		<section name="serverList" class="fillTheScreen" style="display:none">
 			<div name="main" class="border p-3">
-				<div class="row no-gutters" style="height:100%;">
+				<div name="listpart" class="row no-gutters" style="height:100%;">
 					<div class="col-md-12 col-lg-6">
 						<h3>MAFIA :: Room List</h3>
 						<br>
@@ -85,6 +85,23 @@
 							</form>
 						</div>
 					</div>
+				</div>
+				<div name="passwordarea" class="" style="height:100%;display:none;">
+					<h3>MAFIA :: Entering Password Protected Room ...</h3>
+					<br>
+					<form>
+						<div class="form-group">
+							<div class="input-group">
+								<input id="passwordarea-input" type="text" class="form-control" required placeholder="Password goes here">
+							</div>
+							<div class="input-group mt-2">
+								<button id="passwordarea-submit" type="submit" class="btn btn-primary">Join Room</button>
+							</div>
+							<div class="input-group mt-2">
+								<p id="passwordarea-error" class="text-danger" style="display:none">Error: You must enter a password</p>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</section>
