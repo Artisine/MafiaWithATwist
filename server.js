@@ -18,18 +18,28 @@ class Client {
 		console.log(`[Create] Client ${this.socketId}  :SocketId=${this.socketId}  :InRoom=${this.inRoom}  :RoomId=${this.roomId}`);
 	}
 	_destroy() {
-		if (this.room) {
+		if (this.room || this.inRoom) {
 			// if not null
-			this.room.removeClient(this.socketId);
+			this.leaveRoom();
 		}
+		console.log(`Deleting ${this.socketId} from Clients<Map>`);
+		clients.delete(this.socketId);
+	}
+	_setRoom(room) {
+		if (typeof room === "string") room = rooms.get(room);
+		this.room = room;
+		this.roomId = room.id;
+		// do not set inRoom yet
+		console.log(`Client ${this.socketId} set own Room to "${room.name}" (#${room.id})`);
 	}
 	_setRoomId(roomId) {
 		this.roomId = roomId;
 		this.room = rooms.get(roomId);
-		console.log(`Client ${this.socketId} set own room to Room ${roomId}`);
+		console.log(`Client ${this.socketId} set own Room to "${room.name}" (#${room.id})`);
 	}
 	joinRoom(_room, pass) {
 		if (typeof _room === "string") _room = rooms.get(_room);
+		if (this.inRoom) this.leaveRoom();
 		if (_room.addClient(this.socketId, pass)) {
 			this.inRoom = true;
 			this.room = _room;
@@ -44,9 +54,13 @@ class Client {
 	}
 	leaveRoom() {
 		if (this.roomId !== null || this.room !== null) {
+			const roomName = this.room.name;
+			const roomId = this.room.id;
+			this.inRoom = false;
+			this.room.removeClient(this);
 			this.room = null;
 			this.roomId = null;
-			this.inRoom = false;
+			console.log(`Client ${this.socketId} left Room "${roomName}" (#${roomId}) - now NULL.`);
 			return true;
 		}
 		return false;
@@ -89,24 +103,33 @@ class Room {
 	addClient(client, pass=null) {
 		if (this.numberOfClients >= this.maximumNumberOfClients || pass !== this.password) return false;
 		if (typeof client === "string") client = clients.get(client);
-		this.clients.set(client.id, client);
-		client._setRoomId(this.id);
+		this.clients.set(client.socketId, client);
+		client._setRoom(this.id);
 		this.numberOfClients = this.clients.size;
-		console.log(`Room ${this.id} added Client ${client.id}`);
+		console.log(`Room "${this.name}" (#${this.id}) added Client ${client.socketId}`);
 		return true;
 	}
-	removeClient(client) {
+	removeClient(client, reason="Disconnect") {
 		if (typeof client === "string") client = this.clients.get(client);
-		client.leaveRoom();
-		this.clients.delete(client.id);
+		if (client.inRoom) client.leaveRoom();
+		const _id = client.socketId;
+		this.clients.delete(_id);
 		this.numberOfClients = this.clients.size;
-		console.log(`Room ${this.id} removed Client ${id}`);
+		console.log(`Room "${this.name}" (#${this.id}) removed Client ${_id}; ${reason}`);
 	}
 	clearClients() {
 		for (const client of this.clients.values()) {
 			this.removeClient(client);
 		}
 	}
+
+	// schedule(task, ...args) {
+	// 	if (task === "kick") {
+	// 		setTimeout(()=>{
+	// 			this.removeClient(args[0]);
+	// 		}, Number(args[1]));
+	// 	}
+	// }
 
 	details() {
 		console.log(`Room ${this.id} = {
@@ -133,7 +156,7 @@ class Room {
 		const roomName = room.name;
 		const roomId = room.id;
 		rooms.delete(roomId);
-		console.log(`[Destroy] Room ${roomId} ${roomName} was destroyed.`);
+		console.log(`[Destroy] Room "${roomName}" (#${roomId}) was destroyed.`);
 	}
 }
 
@@ -218,3 +241,5 @@ Ctrl+C to halt\n`);
 
 const bob = Room.createRoom("Some room I made");
 bob.details();
+const sam = Room.createRoom("Sam's room");
+sam.details();

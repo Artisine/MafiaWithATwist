@@ -31,6 +31,7 @@ class EnterGame {
 			setTimeout(()=>{
 				getElement("section[name='enterGame']").style.display = "none";
 				getElement("section[name='serverList']").style.display = "block";
+				ServerListHandler.updateRoomList();
 			}, 2500);
 			setTimeout(()=>{
 				getElement("main").classList.replace("changeColor", "bg-white");
@@ -205,7 +206,11 @@ class ServerListHandler {
 		let roomId = null;
 		const roomPassNode = getElement("#room-creator_password");
 		let passwd = roomPassNode.value.replace(whitespaceRegex, " ");
-		if (passwd === "") passwd = null;
+		console.log(`Entered password=${passwd}=End`);
+		if (passwd === "" || passwd === " ") {
+			passwd = null;
+		}
+		console.log(`Password=${passwd}=End; Typeof=${typeof passwd}`);
 
 		// console.log("Registered: " + roomName);
 
@@ -215,11 +220,16 @@ class ServerListHandler {
 		}, function(other){
 			console.log(`Server assigned Room of name ${roomName} with ID: ${other}`);
 			roomId = String(other);
-			const isLocked = roomLockedNode.checked;
+			const isLocked = (passwd === null) ? false : (roomLockedNode.checked) ? true : false;
 			ServerListHandler.deployRoomListObject(roomId, roomName, isLocked);
 			getElement("#create-room-btn").click();
 			getElement("#create-room-btn").blur();
 		});
+	}
+
+	static whenRoomPasswordReturnButtonClicked() {
+		getElement("[name='passwordarea']").style.display = "none";
+		getElement("[name='listpart']").style.display = "block";
 	}
 }
 getElement("#create-room-btn").addEventListener("click", ServerListHandler.whenRoomCreatorButtonClicked);
@@ -230,7 +240,7 @@ getElement("#passwordarea-input").addEventListener("keydown", (e)=>{
 	const evt = e || event;
 	if (evt.key === "Enter") getElement("#passwordarea-submit").click();
 });
-
+getElement("#passwordarea-return").addEventListener("click", ServerListHandler.whenRoomPasswordReturnButtonClicked);
 
 
 class Dev {

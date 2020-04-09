@@ -70,14 +70,36 @@
 									<div class="input-group">
 										<input id="room-creator_name" type="text" class="form-control" required placeholder="Room Name is ...">
 									</div>
-									<div class="custom-control custom-switch">
+								</div>
+								<div class="form-group">
+									<div class="custom-control custom-switch mt-2">
 										<input type="checkbox" class="custom-control-input" id="room-creator_locked">
 										<label class="custom-control-label" for="room-creator_locked">Will it be 🔒 with a password?</label>
 									</div>
-									<div class="input-group mt-1">
+									<div class="input-group">
 										<input id="room-creator_password" type="text" class="form-control" disabled placeholder="Super_secret_password">
 									</div>
-									<div class="input-group mt-3">
+								</div>
+								<div class="row mt-3">
+									<div class="col">
+										<div class="input-group">
+											<div class="custom-control custom-switch ">
+												<input type="checkbox" class="custom-control-input" id="room-creator_alive-chat-enabled">
+												<label class="custom-control-label" for="room-creator_alive-chat-enabled">Allow Alive Chat? Disable if using Discord / Skype, etc</label>
+											</div>
+										</div>
+									</div>
+									<div class="col">
+										<div class="input-group">
+											<div class="custom-control custom-switch ">
+												<input type="checkbox" class="custom-control-input" id="room-creator_dead-chat-enabled">
+												<label class="custom-control-label" for="room-creator_dead-chat-enabled">Allow Dead Chat? (for dead players to communicate)</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="form-group mt-3">
+									<div class="input-group">
 										<p id="room-creator_error" class="text-danger w-100" style="display:none">Error: Room Name is required</p><br>
 										<button id="room-creator_submit" type="submit" class="btn btn-dark">Create Room! Do it!</button>
 									</div>
@@ -95,6 +117,7 @@
 								<input id="passwordarea-input" type="text" class="form-control" required placeholder="Password goes here">
 							</div>
 							<div class="input-group mt-2">
+								<button id="passwordarea-return" type="button" class="btn btn-secondary mr-2">Go Back</button>
 								<button id="passwordarea-submit" type="submit" class="btn btn-primary">Join Room</button>
 							</div>
 							<div class="input-group mt-2">
