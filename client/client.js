@@ -1,26 +1,109 @@
-var socket;
-var socketLoaded = false;
-var enterGameButtonPressed = false;
-var roomCreatorHidden = true;
+export var socket;
+export var socketLoaded = false;
+export var enterGameButtonPressed = false;
+export var roomCreatorHidden = true;
 try {
-	socket = io();
+	socket = io({
+		transports: ["websocket"]
+	});
 	socketLoaded = true;
+	socket.on("reconnect_attempt", ()=>{
+		socket.io.opts.transports = ["polling", "websocket"];
+	});
 	console.info("%cSocket.IO loaded!", "color: green");
 } catch {
 	console.error("Socket.IO not loaded");
 }
+console.log(socket);
 
-function getElement(e) {
-	return document.querySelector(e);
+
+
+class Dev {
+	static logRooms() {
+		socket.emit("log-rooms", {
+			rooms: "all"
+		}, function(other) {
+			console.log("Logged rooms: ");
+			console.log([... other.room]);
+		});
+	}
 }
 
-class Generics {
-	static createHTMLElement(el) {
-		return document.createElement(el);
+
+
+
+
+
+
+
+
+
+
+
+
+// Mafia, boilerplate code taken from "Boids"
+
+import * as Utility from "./client-modules/utility.js";
+import {Vector2} from "./client-modules/vector2.js";
+import Canvas from "./client-modules/canvas.js";
+import {instances, Instance, boids} from "./client-modules/instance.js";
+import Entity from "./client-modules/entity.js";
+import Actor from "./client-modules/actor.js";
+import Camera from "./client-modules/camera.js";
+import Player from "./client-modules/player.js";
+import {UserInputService, controlsApplyTo} from "./client-modules/userInputService.js";
+const getElement = Utility.getElement;
+
+
+export var mouse = {x: undefined, y: undefined};
+export var deltaTimeMultiplier = 1;
+
+const mainCanvas = new Canvas(Utility.getElement("#canvas"));
+window.addEventListener("resize", mainCanvas.resize.bind(mainCanvas));
+export {mainCanvas};
+
+const mainPlayer = new Player();
+controlsApplyTo.set(mainPlayer.id, mainPlayer);
+window.addEventListener("keydown", UserInputService.whenKeyboardDown);
+window.addEventListener("keyup", UserInputService.whenKeyboardUp);
+mainCanvas.canvasElement.addEventListener("mousedown", UserInputService.whenMouseDown);
+mainCanvas.canvasElement.addEventListener("mouseup", UserInputService.whenMouseUp);
+mainCanvas.canvasElement.addEventListener("click", UserInputService.whenMouseClick);
+mainCanvas.canvasElement.addEventListener("mousemove", UserInputService.whenMouseMove);
+export {mainPlayer};
+
+
+const mainCamera = new Camera();
+mainCamera.setPosition(0, 0);
+mainCanvas.setCamera(mainCamera);
+export {mainCamera};
+console.log(mainPlayer);
+mainPlayer.setPosition(new Vector2(200, 200)).setTransparency(0).setCanCollide(false);
+
+
+
+const straightIntoCanvas = true;
+
+if (straightIntoCanvas) {
+	toggleVisiblityOnSections("enterGame", false)("serverList", false)("canvas-section", true);
+	getElement("main").style.display = "none";
+	mainCanvas.resize();
+}
+
+
+
+
+function toggleVisiblityOnSections(name, force) {
+	if (force) {
+		getElement(`section[name="${name}"]`).style.display = (force) ? "block" : "none";
+	} else {
+		if (getElement(`section[name="${name}"]`).style.display === "block") {
+			getElement(`section[name="${name}"]`).style.display = "none";
+		} else {
+			getElement(`section[name="${name}"]`).style.display = "block";
+		}
 	}
-	static getElement(e) {
-		return getElement(e);
-	}
+	return toggleVisiblityOnSections;
 }
 
 class EnterGame {
@@ -41,11 +124,9 @@ class EnterGame {
 		} else {
 			getElement("[name='enterError']").style.display = "block";
 		}
+		console.log(enterGameButtonPressed);
 	}
 }
-getElement("#enterGame").addEventListener("click", EnterGame.whenButtonPressed);
-
-
 const serverListRooms = new Map();
 class ServerListHandler {
 	static clearRoomList() {
@@ -138,6 +219,10 @@ class ServerListHandler {
 		}, function(data){
 			if (data.success) {
 				console.log(`Acknowledged - whenRoomListObjectClicked - ${data}`);
+
+				toggleVisiblityOnSections("serverList")("canvas-section");
+				getElement("main").style.display = "none";
+
 				return true;
 			} else {
 				return false;
@@ -158,7 +243,7 @@ class ServerListHandler {
 		} else {
 			console.log("Incorrect");
 			getElement("#passwordarea-error").style.display = "block";
-			getElement("#passwordarea-error").textContent = "Error: 1 attempt remaining.";
+			getElement("#passwordarea-error").textContent = "Error: Incorrect - Please confirm with your Party Leader";
 		}
 	}
 
@@ -188,7 +273,7 @@ class ServerListHandler {
 		const roomNameNode = getElement("#room-creator_name");
 		const roomLockedNode = getElement("#room-creator_locked");
 		let roomName = roomNameNode.value.trim();
-        const whitespaceRegex = /\s+/gi;
+		const whitespaceRegex = /\s+/gi;
 		roomName = roomName.replace(whitespaceRegex, " ");
 		// console.log(`roomName = ${roomName}`);
 		if (roomName.length > 32) {
@@ -232,24 +317,51 @@ class ServerListHandler {
 		getElement("[name='listpart']").style.display = "block";
 	}
 }
-getElement("#create-room-btn").addEventListener("click", ServerListHandler.whenRoomCreatorButtonClicked);
-getElement("#room-creator_locked").addEventListener("change", ServerListHandler.whenRoomCreatorLockedSliderChanged);
-getElement("#room-creator_submit").addEventListener("click", ServerListHandler.whenRoomCreatorSubmitButtonClicked);
-getElement("#passwordarea-submit").addEventListener("click", ServerListHandler.whenRoomPasswordInputSubmit);
-getElement("#passwordarea-input").addEventListener("keydown", (e)=>{
+Utility.getElement("#enterGame").addEventListener("click", EnterGame.whenButtonPressed);
+Utility.getElement("#create-room-btn").addEventListener("click", ServerListHandler.whenRoomCreatorButtonClicked);
+Utility.getElement("#room-creator_locked").addEventListener("change", ServerListHandler.whenRoomCreatorLockedSliderChanged);
+Utility.getElement("#room-creator_submit").addEventListener("click", ServerListHandler.whenRoomCreatorSubmitButtonClicked);
+Utility.getElement("#passwordarea-submit").addEventListener("click", ServerListHandler.whenRoomPasswordInputSubmit);
+Utility.getElement("#passwordarea-input").addEventListener("keydown", (e)=>{
 	const evt = e || event;
 	if (evt.key === "Enter") getElement("#passwordarea-submit").click();
 });
-getElement("#passwordarea-return").addEventListener("click", ServerListHandler.whenRoomPasswordReturnButtonClicked);
+Utility.getElement("#passwordarea-return").addEventListener("click", ServerListHandler.whenRoomPasswordReturnButtonClicked);
 
 
-class Dev {
-	static logRooms() {
-		socket.emit("log-rooms", {
-			rooms: "all"
-		}, function(other) {
-			console.log("Logged rooms: ");
-			console.log([... other.room]);
-		});
-	}
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+console.log(`[%cMAIN client.js%c] Loaded.`, "color: purple", "color: black");
+window.requestAnimationFrame(mainCanvas.update.bind(mainCanvas));

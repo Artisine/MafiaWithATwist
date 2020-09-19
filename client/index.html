@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>MAFIA</title>
+	<title>MAFIA with a twist</title>
 </head>
 <body>
 	<main class="p-5">
@@ -129,53 +129,16 @@
 			</div>
 		</section>
 	</main>
+	<section name="canvas-section" class="fillTheScreen" style="display:none;">
+		<div id="canvas-container">
+			<canvas id="canvas">uhoh</canvas>
+		</div>
+	</section>
 
 	<link href="./bootstrap.min.css" rel="stylesheet" type="text/css">
-	<style>
-		main {
-			width: 100vw;
-			height: 100vh;
-			background-color: #000000;
-			color: #ffffff;
-			transition: background-color 5s ease, color 5s ease;
-		}
-		main.changeColor {
-			background-color: white;
-			color: black;
-		}
-		.fillTheScreen {
-			width: 100%;
-			height: 100%;
-		}
-		.text-black {
-			color: #000000;
-		}
-		
-		section > div[name="main"] {
-			width: 100%;
-			height: 100%;
-		}
-
-		section[name="enterGame"] div[name="main"] {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-		section[name="enterGame"] div[name="middleInner"] {
-			text-align: center;
-		}
-
-		.room {
-			transition: background-color 0.5s ease;
-			cursor: pointer;
-		}
-		.room:hover {
-			background-color: rgba(0, 0, 0, 0.125);
-		}
-
-	</style>
+	<link href="./client.css" rel="stylesheet" type="text/css">
 	<script src="./socket.io/socket.io.js"></script>
-	<script src="./client.js"></script>
+	<script src="./client.js" type="module"></script>
 	<script src="./feather.min.js"></script>
 	<script>
 		feather.replace();

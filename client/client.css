@@ -1,0 +1,55 @@
+main {
+	width: 100vw;
+	height: 100vh;
+	background-color: #000000;
+	color: #ffffff;
+	transition: background-color 3s ease, color 3s ease;
+}
+main.changeColor {
+	background-color: white;
+	color: black;
+}
+.fillTheScreen {
+	width: 100%;
+	height: 100%;
+}
+.text-black {
+	color: #000000;
+}
+
+section > div[name="main"] {
+	width: 100%;
+	height: 100%;
+}
+
+section[name="enterGame"] div[name="main"] {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+section[name="enterGame"] div[name="middleInner"] {
+	text-align: center;
+}
+
+section[name="canvas-section"] {
+	width: 100vw;
+	height: 100vh;
+}
+div#canvas-container {
+	width: 100%;
+	height: 100%;
+}
+canvas#canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0.1px solid red;
+}
+
+.room {
+	transition: background-color 0.5s ease;
+	cursor: pointer;
+}
+.room:hover {
+	background-color: rgba(0, 0, 0, 0.125);
+}
